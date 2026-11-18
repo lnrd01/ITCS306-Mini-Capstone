@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Your cart · Bodega Hardware{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-5xl px-6 py-12">
+  <h1 class="text-5xl font-bold text-navy">Your cart</h1>
+  {% if rows %}
+  <div class="mt-8 overflow-x-auto">
+  <table class="w-full text-left">
+    <thead class="border-b border-slate-300 text-slate-500"><tr><th class="py-2">Product</th><th>Price</th><th>Quantity</th><th class="text-right">Subtotal</th><th></th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+    <tr class="border-b border-slate-200">
+      <td class="py-3"><a href="{% url 'product_detail' r.product.pk %}" class="font-semibold text-navy">{{ r.product.name }}</a></td>
+      <td>₱{{ r.product.price }}</td>
+      <td>
+        <form method="post" action="{% url 'cart_update' r.product.pk %}" class="field flex gap-2">{% csrf_token %}
+          <input type="number" name="quantity" value="{{ r.quantity }}" min="0" max="{{ r.product.stock }}" class="!w-24 !py-1.5">
+          <button class="rounded-full bg-slate-200 px-4 text-sm font-semibold text-navy hover:bg-slate-300">Update</button>
+        </form>
+      </td>
+      <td class="text-right">₱{{ r.subtotal }}</td>
+      <td class="pl-4"><form method="post" action="{% url 'cart_remove' r.product.pk %}">{% csrf_token %}<button class="text-red-600 underline">Remove</button></form></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <div class="mt-8 flex flex-wrap items-center justify-between gap-4">
+    <p class="text-3xl font-bold">Total: ₱{{ total }}</p>
+    <a href="{% url 'checkout' %}" class="rounded-lg bg-navy px-8 py-3 text-lg font-semibold text-white hover:bg-steel">Check out</a>
+  </div>
+  {% else %}
+  <p class="mt-6 text-lg">Your cart is empty. <a href="{% url 'product_list' %}" class="font-semibold text-azure underline">Browse products</a> to add items.</p>
+  {% endif %}
+</div>
+{% endblock %}

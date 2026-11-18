@@ -1,0 +1,31 @@
+{% extends "owner/base.html" %}
+{% block content %}
+{% include "owner/_top.html" %}
+
+<ul class="mt-6 divide-y divide-slate-200 rounded-3xl border border-slate-200 bg-white px-2">
+  {% for p in products %}
+  <li id="p{{ p.pk }}" class="flex flex-wrap items-center gap-4 px-4 py-4">
+    <div class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl text-3xl">
+      {% if p.image %}<img src="{{ p.image.url }}" alt="" class="h-full w-full object-cover">{% else %}🔧{% endif %}
+    </div>
+    <div class="min-w-0 flex-1">
+      <p class="truncate text-xl font-semibold text-navy">{{ p.name }}</p>
+      <p class="mt-0.5 flex flex-wrap items-center gap-2 text-lg text-slate-600">₱{{ p.price }}
+        {% if p.stock <= 0 %}<span class="rounded-full bg-red-100 px-3 py-0.5 text-base font-medium text-red-700">Sold out</span>
+        {% elif p.is_low_stock %}<span class="rounded-full bg-amber-100 px-3 py-0.5 text-base font-medium text-amber-800">Only {{ p.stock }} left</span>
+        {% else %}<span class="rounded-full bg-emerald-100 px-3 py-0.5 text-base font-medium text-emerald-800">In stock</span>{% endif %}
+        {% if not p.is_active %}<span class="rounded-full bg-slate-200 px-3 py-0.5 text-base font-medium text-slate-600">Hidden from shop</span>{% endif %}
+      </p>
+    </div>
+    <form method="post" action="{% url 'owner_stock_adjust' p.pk %}" class="flex items-center gap-2">{% csrf_token %}
+      <button name="delta" value="-1" aria-label="Remove one" {% if p.stock <= 0 %}disabled{% endif %} class="h-12 w-12 rounded-full bg-slate-200 text-2xl font-bold text-navy hover:bg-slate-300 disabled:opacity-40">−</button>
+      <span class="min-w-[3rem] text-center text-2xl font-semibold text-navy">{{ p.stock }}</span>
+      <button name="delta" value="1" aria-label="Add one" class="h-12 w-12 rounded-full bg-slate-200 text-2xl font-bold text-navy hover:bg-slate-300">+</button>
+    </form>
+    <a href="{% url 'owner_product_edit' p.pk %}" class="rounded-full bg-slate-200 px-6 py-2.5 text-lg font-semibold text-navy hover:bg-slate-300">Edit</a>
+  </li>
+  {% empty %}
+  <li class="p-8 text-center text-lg">No products yet. <a href="{% url 'owner_product_add' %}" class="font-semibold text-azure underline">Add your first product</a>.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

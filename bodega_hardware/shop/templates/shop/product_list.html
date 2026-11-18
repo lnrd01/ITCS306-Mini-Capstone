@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Products · Bodega Hardware{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-7xl px-6 py-12">
+  <h1 class="text-5xl font-bold text-navy">Products</h1>
+  <form method="get" class="field mt-6 flex flex-wrap gap-3">
+    <input name="q" value="{{ q }}" placeholder="Search by name or SKU" class="!w-auto flex-1">
+    <select name="category" class="!w-auto">
+      <option value="">All categories</option>
+      {% for c in categories %}<option value="{{ c.pk }}" {% if category == c.pk|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
+    </select>
+    <button class="rounded-full bg-navy px-8 font-semibold text-white hover:bg-steel">Search</button>
+  </form>
+
+  <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {% for p in products %}
+    <a href="{% url 'product_detail' p.pk %}" class="overflow-hidden rounded-xl border border-slate-200 hover:border-steel">
+      <div class="flex h-44 items-center justify-center bg-slate-100 text-5xl">
+        {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.name }}" class="h-full w-full object-cover">{% else %}🔧{% endif %}
+      </div>
+      <div class="p-4">
+        <p class="text-sm text-slate-500">{{ p.category.name }}</p>
+        <h2 class="text-lg font-semibold text-navy">{{ p.name }}</h2>
+        <p class="mt-1 text-xl font-bold">₱{{ p.price }}</p>
+        <p class="mt-1 text-sm {% if p.stock <= 0 %}text-red-600{% elif p.is_low_stock %}text-amber-600{% else %}text-green-700{% endif %}">
+          {% if p.stock <= 0 %}Out of stock{% elif p.is_low_stock %}Only {{ p.stock }} left{% else %}In stock{% endif %}
+        </p>
+      </div>
+    </a>
+    {% empty %}
+    <p class="col-span-full text-lg">No products match your search. Try a different name or clear the category filter.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

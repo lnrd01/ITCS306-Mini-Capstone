@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+{% block messages %}{% endblock %}
+{% block content %}
+
+<section class="bg-gradient-to-r from-ice/60 to-navy/60">
+  <div class="mx-auto grid max-w-7xl items-center gap-8 px-6 py-16 md:grid-cols-2">
+    <div class="text-center md:px-8">
+      <h1 class="text-5xl font-bold text-slate-900 md:text-6xl">Everything you need to build and fix</h1>
+      <p class="mx-auto mt-5 max-w-md text-lg text-slate-900">Hand tools, fasteners and building supplies, in stock and ready to order.</p>
+      <div class="mt-8 flex justify-center gap-4">
+        <a href="{% url 'product_list' %}" class="rounded-md bg-slate-200 px-6 py-2.5 text-lg font-semibold text-navy hover:bg-white">Shop now</a>
+        <a href="#contact" class="rounded-md bg-slate-200 px-6 py-2.5 text-lg font-semibold text-navy hover:bg-white">Contact us</a>
+      </div>
+    </div>
+    <div class="min-h-[18rem] overflow-hidden rounded-l-full bg-slate-300">
+      <img src="{% static 'img/hero.jpg' %}" alt="Hand tools" class="h-full w-full object-cover" onerror="this.remove()">
+    </div>
+  </div>
+</section>
+
+<section id="about" class="mx-auto grid max-w-7xl items-center gap-10 px-6 py-20 md:grid-cols-2">
+  <div>
+    <p class="text-lg text-slate-600">About us</p>
+    <h2 class="mt-1 text-5xl font-bold text-slate-900">{{ site.about_title }}</h2>
+    <p class="mt-5 max-w-xl">{{ site.about_text|linebreaksbr }}</p>
+    <div class="mt-8 grid max-w-xl grid-cols-2 gap-4 text-center text-xl font-light text-white">
+      <div class="rounded-lg bg-steel p-8"><p class="text-3xl">👥</p>Friendly team</div>
+      <div class="rounded-lg bg-navy p-8"><p class="text-3xl">🕒</p>Open 24/7 online</div>
+      <div class="rounded-lg bg-azure p-8"><p class="text-3xl">🤝</p>Fair prices</div>
+      <div class="rounded-lg bg-ice p-8"><p class="text-3xl">🏅</p>Quality guaranteed</div>
+    </div>
+  </div>
+  <div class="min-h-[20rem] overflow-hidden rounded-lg border-4 border-navy bg-slate-200">
+    <img src="{% static 'img/about.jpg' %}" alt="Tools on a workbench" class="h-full w-full object-cover" onerror="this.remove()">
+  </div>
+</section>
+
+<section id="contact" class="grid md:grid-cols-2">
+  <div class="bg-navy px-8 py-16 text-white md:px-14">
+    <h2 class="text-center text-6xl font-bold">Contact Us</h2>
+    <p class="mt-10 text-xl">Questions about an item, an order or a bulk purchase? Send us a message and we'll reply.</p>
+    <dl class="mt-12 space-y-8">
+      <div class="flex items-center gap-5"><span class="text-3xl">📍</span><div><dt class="font-semibold">Address</dt><dd class="text-2xl">{{ site.address }}</dd></div></div>
+      <div class="flex items-center gap-5"><span class="text-3xl">📞</span><div><dt class="font-semibold">Phone Number</dt><dd class="text-2xl">{{ site.phone }}</dd></div></div>
+      <div class="flex items-center gap-5"><span class="text-3xl">✉️</span><div><dt class="font-semibold">Email Address</dt><dd class="text-2xl">{{ site.email }}</dd></div></div>
+    </dl>
+  </div>
+  <div class="bg-gradient-to-br from-slate-400 to-slate-600 px-6 py-12 md:px-10">
+    <div class="mx-auto max-w-xl rounded-3xl bg-white p-8">
+      <h3 class="text-4xl font-bold text-navy">Get in Touch</h3>
+      <p class="mb-5 mt-1 text-sm">Have a question or feedback? Fill out the form below and let us know how we can help.</p>
+      {% for message in messages %}<p class="mb-4 rounded-lg bg-blue-100 px-4 py-3 text-navy">{{ message }}</p>{% endfor %}
+      <form method="post" action="{% url 'home' %}">{% csrf_token %}
+        {% include "partials/form_fields.html" %}
+        <div class="text-center"><button class="rounded-lg bg-navy px-10 py-2.5 text-lg font-semibold text-white hover:bg-steel">Send message</button></div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

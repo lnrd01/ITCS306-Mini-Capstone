@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Checkout · Bodega Hardware{% endblock %}
+{% block content %}
+<div class="mx-auto grid max-w-5xl gap-10 px-6 py-12 md:grid-cols-2">
+  <div>
+    <h1 class="mb-6 text-4xl font-bold text-navy">Delivery details</h1>
+    <form method="post">{% csrf_token %}
+      {% include "partials/form_fields.html" %}
+      <button class="w-full rounded-lg bg-navy py-3 text-lg font-semibold text-white hover:bg-steel">Place order (pay on delivery)</button>
+    </form>
+  </div>
+  <div>
+    <h2 class="mb-4 text-2xl font-semibold text-navy">Order summary</h2>
+    <ul class="divide-y divide-slate-200">
+      {% for r in rows %}<li class="flex justify-between py-2"><span>{{ r.quantity }} x {{ r.product.name }}</span><span>₱{{ r.subtotal }}</span></li>{% endfor %}
+    </ul>
+    <p class="mt-4 text-right text-2xl font-bold">Total: ₱{{ total }}</p>
+  </div>
+</div>
+{% endblock %}

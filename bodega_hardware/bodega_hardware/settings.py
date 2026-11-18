@@ -37,6 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pages',
+    'accounts',
+    'inventory',
+    'shop',
+    'orders',
+    'owner',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'accounts.middleware.KeepStaffOutOfShopMiddleware',
 ]
 
 ROOT_URLCONF = 'bodega_hardware.urls'
@@ -125,3 +132,16 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+INSTALLED_APPS += [a for a in ["pages", "accounts", "inventory", "shop", "orders"] if a not in INSTALLED_APPS]
+
+TEMPLATES[0]["DIRS"] = [BASE_DIR / "templates"]
+TEMPLATES[0]["OPTIONS"]["context_processors"].append("shop.context_processors.cart_count")
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "after_login"
+LOGOUT_REDIRECT_URL = "/"

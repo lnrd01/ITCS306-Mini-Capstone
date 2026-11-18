@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}My orders · Bodega Hardware{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-4xl px-6 py-12">
+  <h1 class="text-5xl font-bold text-navy">My orders</h1>
+  <ul class="mt-8 space-y-3">
+    {% for o in orders %}
+    <li><a href="{% url 'order_detail' o.pk %}" class="flex flex-wrap justify-between gap-2 rounded-xl border border-slate-200 p-4 hover:border-steel">
+      <span class="font-semibold text-navy">Order #{{ o.pk }} · {{ o.created_at|date:"M j, Y" }}</span>
+      <span>{{ o.get_status_display }} · ₱{{ o.total }}</span>
+    </a></li>
+    {% empty %}
+    <li class="text-lg">You haven't placed any orders yet. <a href="{% url 'product_list' %}" class="font-semibold text-azure underline">Start shopping</a>.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

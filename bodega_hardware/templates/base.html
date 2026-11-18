@@ -1,0 +1,87 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Bodega Hardware{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      fontFamily: { sans: ["Outfit", "sans-serif"] },
+      colors: { navy: "#34495e", steel: "#4a7db0", azure: "#3a8ee6", ice: "#7db4ee" }
+    } } };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .field input, .field textarea, .field select {
+      width: 100%; border: 1px solid #34495e; border-radius: 9999px;
+      background: #e5e7eb; padding: .7rem 1.2rem; color: #1f2937;
+    }
+    .field textarea { border-radius: 1.25rem; }
+    .field input:focus, .field textarea:focus, .field select:focus { outline: 2px solid #3a8ee6; outline-offset: 2px; }
+  </style>
+</head>
+<body class="flex min-h-screen flex-col bg-white font-sans text-slate-800">
+
+<header class="bg-navy text-white">
+  <nav class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-6 py-5">
+    <a href="{% url 'home' %}" class="flex items-center gap-2 text-lg font-semibold">
+      <span class="rounded-md bg-white px-1.5 py-0.5">🧰</span> Bodega Hardware
+    </a>
+    <div class="flex gap-6 text-lg font-semibold">
+      <a href="{% url 'home' %}" class="hover:text-ice">Home</a>
+      <a href="{% url 'home' %}#about" class="hover:text-ice">About</a>
+      <a href="{% url 'product_list' %}" class="hover:text-ice">Products</a>
+      <a href="{% url 'home' %}#contact" class="hover:text-ice">Contact</a>
+    </div>
+    <div class="flex items-center gap-4">
+      {% if user.is_authenticated %}
+        {% if user.is_staff %}
+          <a href="{% url 'owner_stock' %}" class="rounded-md bg-azure px-4 py-1.5 font-semibold text-white hover:bg-ice">Owner dashboard</a>
+        {% else %}
+          <a href="{% url 'order_list' %}" class="hover:text-ice">My orders</a>
+        {% endif %}
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}
+          <button class="rounded-md bg-slate-200 px-4 py-1.5 font-semibold text-navy hover:bg-white">Log out</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="rounded-md bg-slate-200 px-4 py-1.5 font-semibold text-navy hover:bg-white">Log in</a>
+      {% endif %}
+      {% if not user.is_staff %}
+      <a href="{% url 'cart' %}" class="relative text-2xl" aria-label="Cart">🛒
+        {% if cart_count %}<span class="absolute -right-3 -top-2 rounded-full bg-azure px-1.5 text-xs font-semibold">{{ cart_count }}</span>{% endif %}
+      </a>
+      {% endif %}
+    </div>
+  </nav>
+</header>
+
+{% block messages %}
+  {% if messages %}
+  <div class="mx-auto w-full max-w-5xl px-6 pt-6">
+    {% for message in messages %}
+      <p class="mb-2 rounded-lg px-4 py-3 {% if message.tags == 'error' %}bg-red-100 text-red-800{% elif message.tags == 'warning' %}bg-amber-100 text-amber-800{% else %}bg-blue-100 text-navy{% endif %}">{{ message }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endblock %}
+
+<main class="flex-1">{% block content %}{% endblock %}</main>
+
+<footer class="bg-steel text-white">
+  <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-10 px-6 py-12">
+    <p class="flex items-center gap-3 text-3xl font-semibold"><span class="rounded-md bg-white px-2 py-0.5 text-2xl">🧰</span> Bodega Hardware</p>
+    <div class="flex flex-wrap gap-14">
+      <div><h3 class="mb-3 text-lg font-semibold">Pages</h3>
+        <ul class="space-y-1.5"><li><a href="{% url 'home' %}">Home</a></li><li><a href="{% url 'home' %}#about">About</a></li>
+        <li><a href="{% url 'product_list' %}">Products</a></li><li><a href="{% url 'home' %}#contact">Contact</a></li></ul></div>
+      <div><h3 class="mb-3 text-lg font-semibold">Follow us</h3>
+        <ul class="space-y-1.5"><li><a href="#">TikTok</a></li><li><a href="#">Twitter</a></li><li><a href="#">Facebook</a></li><li><a href="#">LinkedIn</a></li></ul></div>
+      <div><h3 class="mb-3 text-lg font-semibold">Legal</h3>
+        <ul class="space-y-1.5"><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms &amp; Conditions</a></li></ul></div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

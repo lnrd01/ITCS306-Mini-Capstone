@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Your shop · Bodega Hardware{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      fontFamily: { sans: ["Outfit", "sans-serif"] },
+      colors: { navy: "#34495e", steel: "#4a7db0", azure: "#3a8ee6", ice: "#7db4ee" }
+    } } };
+  </script>
+  <style>
+    .field input, .field textarea, .field select {
+      width: 100%; border: 1px solid #cbd5e1; border-radius: 9999px;
+      background: #fff; padding: .7rem 1.2rem; color: #1f2937;
+    }
+    .field textarea { border-radius: 1.25rem; }
+    .field input[type=checkbox] { width: auto; }
+    .field input[type=file] { border-radius: .75rem; }
+    .field input:focus, .field textarea:focus, .field select:focus { outline: 2px solid #3a8ee6; outline-offset: 2px; }
+  </style>
+</head>
+<body class="min-h-screen bg-[#f5f7fa] font-sans text-slate-800">
+<header class="border-b border-slate-200 bg-white">
+  <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-4">
+    <a href="{% url 'owner_stock' %}" class="flex items-center gap-3 text-2xl font-semibold text-navy">
+      <span class="rounded-lg bg-slate-100 px-2 py-1">🧰</span> Bodega Hardware
+    </a>
+    <div class="flex items-center gap-3">
+      <div class="flex rounded-full bg-slate-100 p-1 font-semibold">
+        <a href="{% url 'home' %}" class="rounded-full px-5 py-2 text-navy hover:bg-white">Shop</a>
+        <span class="rounded-full bg-navy px-5 py-2 text-white">Owner</span>
+      </div>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}
+        <button class="rounded-full px-3 py-2 text-slate-600 hover:text-navy">Log out</button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<main class="mx-auto max-w-5xl px-6 py-10">
+  {% for message in messages %}
+    <p class="mb-3 rounded-xl px-4 py-3 {% if message.tags == 'error' %}bg-red-100 text-red-800{% elif message.tags == 'warning' %}bg-amber-100 text-amber-800{% else %}bg-emerald-100 text-emerald-800{% endif %}">{{ message }}</p>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>
